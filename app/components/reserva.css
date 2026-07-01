@@ -1,0 +1,974 @@
+/*
+ * reserva.css — Estilos del wizard de reserva de Pax4u
+ *
+ * Importar en globals.css con: @import "./reserva.css";
+ * O añadir directamente al final de globals.css.
+ *
+ * Organización:
+ * 1. Página /reservar (layout general)
+ * 2. WizardReserva (contenedor del wizard)
+ * 3. IndicadorPasos (barra de progreso)
+ * 4. Estilos comunes de pasos (.paso-wizard, .formulario, .campo, .contador)
+ * 5. Paso 1 — Selección de servicio
+ * 6. Paso 3 — Tarjetas de vehículo
+ * 7. Paso 5 — Métodos de pago
+ * 8. Paso 6 — Confirmación
+ * 9. Botones compartidos del wizard
+ * 10. Servicios (añadido subtítulo en español)
+ * 11. Responsive
+ */
+
+/* ═══════════════════════════════════════════════════════════
+   1. PÁGINA /RESERVAR
+   ═══════════════════════════════════════════════════════════ */
+
+.pagina-reserva {
+  min-height: 100vh;
+  background-color: var(--color-gris-claro);
+  padding-top: var(--altura-navbar);
+}
+
+/* Cabecera de la página de reserva */
+.pagina-reserva__cabecera {
+  background-color: var(--color-negro);
+  padding: var(--espacio-xl) var(--espacio-md);
+  text-align: center;
+}
+
+.pagina-reserva__titulo {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 900;
+  color: var(--color-blanco);
+  margin-bottom: var(--espacio-xs);
+}
+
+/* Las tres ventajas en la cabecera */
+.pagina-reserva__subtitulo {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.04em;
+}
+
+/* Contenedor que centra el wizard en la página */
+.pagina-reserva__contenedor {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: var(--espacio-xl) var(--espacio-md) var(--espacio-xxl);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   2. WIZARD RESERVA — Contenedor general
+   ═══════════════════════════════════════════════════════════ */
+
+.wizard-reserva {
+  background-color: var(--color-blanco);
+  border-radius: var(--radio-lg);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.wizard-reserva__contenido {
+  padding: var(--espacio-xl) var(--espacio-lg);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   3. INDICADOR DE PASOS
+   ═══════════════════════════════════════════════════════════ */
+
+.indicador-pasos {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--espacio-lg) var(--espacio-md) var(--espacio-sm);
+  background-color: var(--color-blanco);
+  border-bottom: 1px solid var(--color-gris-borde);
+  gap: 0; /* Los ítems se expanden con flex */
+}
+
+/* Cada ítem del indicador (círculo + etiqueta + línea) */
+.indicador-pasos__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+/* Círculo numerado */
+.indicador-pasos__circulo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* Estado: completado */
+.indicador-pasos__circulo--completado {
+  background-color: var(--color-amarillo);
+  color: var(--color-negro);
+}
+
+/* Estado: actual */
+.indicador-pasos__circulo--actual {
+  background-color: var(--color-negro);
+  color: var(--color-blanco);
+  box-shadow: 0 0 0 3px var(--color-amarillo);
+}
+
+/* Estado: pendiente */
+.indicador-pasos__circulo--pendiente {
+  background-color: var(--color-gris-borde);
+  color: var(--color-gris-texto);
+}
+
+/* Etiqueta de texto bajo el círculo */
+.indicador-pasos__etiqueta {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--color-gris-texto);
+  margin-top: 6px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.indicador-pasos__etiqueta--actual {
+  color: var(--color-negro);
+  font-weight: 700;
+}
+
+/* Línea horizontal entre círculos */
+.indicador-pasos__linea {
+  position: absolute;
+  top: 18px; /* mitad del círculo */
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-gris-borde);
+  z-index: 0;
+}
+
+/* Línea completada en amarillo */
+.indicador-pasos__linea--completada {
+  background-color: var(--color-amarillo);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   4. ESTILOS COMUNES DE PASOS
+   ═══════════════════════════════════════════════════════════ */
+
+/* Contenedor de cada paso */
+.paso-wizard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-lg);
+}
+
+/* Cabecera del paso */
+.paso-wizard__cabecera {
+  border-left: 3px solid var(--color-amarillo);
+  padding-left: var(--espacio-md);
+}
+
+.paso-wizard__titulo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-negro);
+  margin-bottom: 4px;
+}
+
+.paso-wizard__subtitulo {
+  font-size: 0.95rem;
+  color: var(--color-gris-texto);
+}
+
+/* Acciones (botones abajo del paso) */
+.paso-wizard__acciones {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--espacio-md);
+}
+
+/* Acciones con dos botones (Atrás + Siguiente) */
+.paso-wizard__acciones--doble {
+  justify-content: space-between;
+}
+
+/* ─── Formulario y campos ────────────────────────────────────────────────── */
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-md);
+}
+
+/* Fila con dos campos en paralelo */
+.formulario__fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espacio-md);
+}
+
+/* Campo individual */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo__etiqueta {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-negro);
+}
+
+.campo__requerido {
+  color: #e53935;
+  margin-left: 2px;
+}
+
+.campo__opcional {
+  font-weight: 400;
+  color: var(--color-gris-texto);
+  font-size: 0.8rem;
+}
+
+.campo__input,
+.campo__textarea {
+  padding: 0.75rem var(--espacio-sm);
+  border: 1.5px solid var(--color-gris-borde);
+  border-radius: var(--radio);
+  font-size: 0.95rem;
+  font-family: var(--fuente-principal);
+  color: var(--color-negro);
+  background-color: var(--color-blanco);
+  transition: border-color var(--transicion), box-shadow var(--transicion);
+  width: 100%;
+}
+
+.campo__input:focus,
+.campo__textarea:focus {
+  outline: none;
+  border-color: var(--color-amarillo);
+  box-shadow: 0 0 0 3px rgba(247, 198, 0, 0.2);
+}
+
+/* Estado de error */
+.campo__input--error {
+  border-color: #e53935;
+}
+
+.campo__error {
+  font-size: 0.8rem;
+  color: #e53935;
+  margin-top: 2px;
+}
+
+.campo__ayuda {
+  font-size: 0.8rem;
+  color: var(--color-gris-texto);
+}
+
+.campo__textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* ─── Contador +/- (pasajeros y maletas) ─────────────────────────────────── */
+
+.contador {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-sm);
+  border: 1.5px solid var(--color-gris-borde);
+  border-radius: var(--radio);
+  padding: 0.5rem var(--espacio-sm);
+  width: fit-content;
+}
+
+.contador__boton {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-gris-borde);
+  background: var(--color-blanco);
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transicion), border-color var(--transicion);
+  color: var(--color-negro);
+}
+
+.contador__boton:hover:not(:disabled) {
+  background-color: var(--color-amarillo);
+  border-color: var(--color-amarillo);
+}
+
+.contador__boton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.contador__valor {
+  font-size: 1.1rem;
+  font-weight: 700;
+  min-width: 24px;
+  text-align: center;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   5. PASO 1 — SELECCIÓN DE SERVICIO
+   ═══════════════════════════════════════════════════════════ */
+
+/* Grid de 2 columnas para las tarjetas de servicio */
+.paso1__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--espacio-sm);
+}
+
+/* Tarjeta de opción de servicio */
+.paso1__opcion {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: var(--espacio-md);
+  border: 1.5px solid var(--color-gris-borde);
+  border-radius: var(--radio-lg);
+  background: var(--color-blanco);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color var(--transicion), box-shadow var(--transicion),
+    background-color var(--transicion);
+}
+
+.paso1__opcion:hover {
+  border-color: var(--color-amarillo);
+  box-shadow: var(--sombra-card);
+}
+
+/* Estado seleccionado */
+.paso1__opcion--activa {
+  border-color: var(--color-amarillo);
+  background-color: rgba(247, 198, 0, 0.06);
+  box-shadow: 0 0 0 2px var(--color-amarillo);
+}
+
+/* Check de selección (esquina superior derecha) */
+.paso1__check {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: var(--color-amarillo);
+  color: var(--color-negro);
+  font-size: 0.75rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paso1__opcion-icono {
+  font-size: 1.75rem;
+  margin-bottom: 4px;
+}
+
+.paso1__opcion-titulo {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--color-negro);
+  line-height: 1.2;
+}
+
+.paso1__opcion-subtitulo {
+  font-size: 0.78rem;
+  color: var(--color-gris-texto);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   6. PASO 3 — TARJETAS DE VEHÍCULO
+   ═══════════════════════════════════════════════════════════ */
+
+.paso3__vehiculos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-sm);
+}
+
+.vehiculo-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto auto auto;
+  gap: 4px var(--espacio-md);
+  align-items: center;
+  padding: var(--espacio-md) var(--espacio-lg);
+  border: 1.5px solid var(--color-gris-borde);
+  border-radius: var(--radio-lg);
+  background: var(--color-blanco);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color var(--transicion), box-shadow var(--transicion);
+}
+
+.vehiculo-card:hover {
+  border-color: var(--color-amarillo);
+  box-shadow: var(--sombra-card);
+}
+
+.vehiculo-card--activa {
+  border-color: var(--color-amarillo);
+  background-color: rgba(247, 198, 0, 0.05);
+  box-shadow: 0 0 0 2px var(--color-amarillo);
+}
+
+/* Badge "Seleccionado" */
+.vehiculo-card__badge {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background-color: var(--color-amarillo);
+  color: var(--color-negro);
+  padding: 2px 10px;
+  border-radius: 20px;
+}
+
+.vehiculo-card__icono {
+  font-size: 2.5rem;
+  grid-row: 1 / 3;
+}
+
+.vehiculo-card__nombre {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--color-negro);
+}
+
+.vehiculo-card__descripcion {
+  font-size: 0.875rem;
+  color: var(--color-gris-texto);
+}
+
+.vehiculo-card__capacidad {
+  display: flex;
+  gap: var(--espacio-md);
+  font-size: 0.8rem;
+  color: var(--color-gris-texto);
+  grid-column: 2;
+}
+
+.vehiculo-card__precio {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  grid-row: 1 / 3;
+  grid-column: 3;
+}
+
+.vehiculo-card__precio-desde {
+  font-size: 0.7rem;
+  color: var(--color-gris-texto);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.vehiculo-card__precio-valor {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--color-negro);
+  line-height: 1;
+}
+
+/* Aviso de precio fijo */
+.paso3__aviso {
+  font-size: 0.875rem;
+  color: var(--color-gris-texto);
+  text-align: center;
+  background-color: var(--color-gris-claro);
+  padding: var(--espacio-sm) var(--espacio-md);
+  border-radius: var(--radio);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   7. PASO 5 — MÉTODOS DE PAGO
+   ═══════════════════════════════════════════════════════════ */
+
+/* Resumen de precio al inicio del paso 5 */
+.paso5__resumen-precio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--color-negro);
+  color: var(--color-blanco);
+  border-radius: var(--radio-lg);
+  padding: var(--espacio-lg) var(--espacio-xl);
+  text-align: center;
+}
+
+.paso5__precio-etiqueta {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 4px;
+}
+
+.paso5__precio-valor {
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--color-amarillo);
+  line-height: 1;
+}
+
+.paso5__precio-nota {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 6px;
+}
+
+/* Lista de métodos de pago */
+.paso5__metodos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-sm);
+}
+
+/* Tarjeta de método de pago (como botón de radio customizado) */
+.metodo-pago {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  border: 1.5px solid var(--color-gris-borde);
+  border-radius: var(--radio-lg);
+  background: var(--color-blanco);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color var(--transicion), background-color var(--transicion);
+}
+
+.metodo-pago:hover {
+  border-color: var(--color-amarillo);
+}
+
+.metodo-pago--activo {
+  border-color: var(--color-amarillo);
+  background-color: rgba(247, 198, 0, 0.05);
+  box-shadow: 0 0 0 2px var(--color-amarillo);
+}
+
+/* Círculo de radio simulado */
+.metodo-pago__radio {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--color-gris-borde);
+  flex-shrink: 0;
+  transition: border-color var(--transicion), background-color var(--transicion);
+}
+
+.metodo-pago__radio--activo {
+  border-color: var(--color-amarillo);
+  background-color: var(--color-amarillo);
+  box-shadow: inset 0 0 0 3px white;
+}
+
+.metodo-pago__icono {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.metodo-pago__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.metodo-pago__nombre {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-negro);
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-xs);
+}
+
+.metodo-pago__etiqueta {
+  font-size: 0.7rem;
+  font-weight: 700;
+  background-color: var(--color-amarillo);
+  color: var(--color-negro);
+  padding: 1px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.03em;
+}
+
+.metodo-pago__descripcion {
+  font-size: 0.825rem;
+  color: var(--color-gris-texto);
+}
+
+/* Área para el formulario de Stripe/PayPal */
+.paso5__formulario-pago {
+  border: 1.5px dashed var(--color-gris-borde);
+  border-radius: var(--radio);
+  padding: var(--espacio-md);
+  background-color: var(--color-gris-claro);
+}
+
+.paso5__stripe-placeholder {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--color-gris-texto);
+}
+
+.paso5__seguridad {
+  font-size: 0.8rem;
+  color: var(--color-gris-texto);
+  text-align: center;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   8. PASO 6 — CONFIRMACIÓN
+   ═══════════════════════════════════════════════════════════ */
+
+.paso6 {
+  padding: var(--espacio-md) 0;
+}
+
+/* Área de éxito con check */
+.paso6__exito {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--espacio-xl);
+  background: linear-gradient(135deg, var(--color-negro) 0%, #2a2a2a 100%);
+  border-radius: var(--radio-lg);
+  margin-bottom: var(--espacio-lg);
+}
+
+/* Círculo con check amarillo */
+.paso6__check-circulo {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: var(--color-amarillo);
+  color: var(--color-negro);
+  font-size: 2rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--espacio-md);
+}
+
+.paso6__titulo {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--color-blanco);
+  margin-bottom: var(--espacio-xs);
+}
+
+.paso6__subtitulo {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: var(--espacio-md);
+}
+
+.paso6__subtitulo strong {
+  color: var(--color-amarillo);
+}
+
+/* Número de reserva destacado */
+.paso6__numero-reserva {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background-color: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(247, 198, 0, 0.3);
+  border-radius: var(--radio);
+  padding: var(--espacio-sm) var(--espacio-xl);
+}
+
+.paso6__numero-etiqueta {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.paso6__numero-valor {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--color-amarillo);
+  letter-spacing: 0.06em;
+}
+
+/* Tabla de resumen */
+.paso6__resumen {
+  border: 1.5px solid var(--color-gris-borde);
+  border-radius: var(--radio-lg);
+  overflow: hidden;
+}
+
+.paso6__resumen-titulo {
+  font-size: 1rem;
+  font-weight: 800;
+  padding: var(--espacio-sm) var(--espacio-md);
+  background-color: var(--color-gris-claro);
+  border-bottom: 1px solid var(--color-gris-borde);
+}
+
+/* Fila del resumen */
+.paso6__fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--espacio-sm) var(--espacio-md);
+  border-bottom: 1px solid var(--color-gris-borde);
+  gap: var(--espacio-md);
+}
+
+.paso6__fila:last-child {
+  border-bottom: none;
+}
+
+/* Fila del total: tipografía más grande */
+.paso6__fila--total {
+  background-color: rgba(247, 198, 0, 0.06);
+}
+
+.paso6__etiqueta {
+  font-size: 0.875rem;
+  color: var(--color-gris-texto);
+  flex-shrink: 0;
+}
+
+.paso6__etiqueta--total {
+  font-weight: 700;
+  color: var(--color-negro);
+}
+
+.paso6__valor {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-negro);
+  text-align: right;
+}
+
+.paso6__valor--total {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--color-negro);
+}
+
+/* Próximos pasos */
+.paso6__proximos-pasos {
+  background-color: var(--color-gris-claro);
+  border-radius: var(--radio-lg);
+  padding: var(--espacio-lg);
+}
+
+.paso6__proximos-titulo {
+  font-size: 1rem;
+  font-weight: 800;
+  margin-bottom: var(--espacio-sm);
+}
+
+.paso6__proximos-lista {
+  list-style: decimal;
+  padding-left: var(--espacio-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-xs);
+}
+
+.paso6__proximos-lista li {
+  font-size: 0.9rem;
+  color: var(--color-gris-texto);
+  line-height: 1.5;
+}
+
+.paso6__telefono {
+  color: var(--color-negro);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.paso6__volver-home {
+  font-size: 0.875rem;
+  color: var(--color-gris-texto);
+  text-decoration: underline;
+  transition: color var(--transicion);
+}
+
+.paso6__volver-home:hover {
+  color: var(--color-negro);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   9. BOTONES COMPARTIDOS DEL WIZARD
+   ═══════════════════════════════════════════════════════════ */
+
+/* Botón "Siguiente" (amarillo) */
+.boton-siguiente {
+  background-color: var(--color-amarillo);
+  color: var(--color-negro);
+  font-size: 0.95rem;
+  font-weight: 800;
+  padding: 0.8rem 2rem;
+  border-radius: var(--radio);
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transicion), transform var(--transicion),
+    opacity var(--transicion);
+  box-shadow: var(--sombra-cta);
+}
+
+.boton-siguiente:hover:not(:disabled) {
+  background-color: var(--color-amarillo-hover);
+  transform: translateY(-1px);
+}
+
+.boton-siguiente:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Botón "Atrás" (transparente) */
+.boton-atras {
+  background: none;
+  border: 1.5px solid var(--color-gris-borde);
+  color: var(--color-gris-texto);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--radio);
+  cursor: pointer;
+  transition: border-color var(--transicion), color var(--transicion);
+}
+
+.boton-atras:hover {
+  border-color: var(--color-negro);
+  color: var(--color-negro);
+}
+
+/* Botón "Confirmar reserva" (verde oscuro / negro fuerte) */
+.boton-confirmar {
+  background-color: var(--color-negro);
+  color: var(--color-amarillo);
+  font-size: 0.95rem;
+  font-weight: 800;
+  padding: 0.85rem 2rem;
+  border-radius: var(--radio);
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transicion), transform var(--transicion),
+    opacity var(--transicion);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.boton-confirmar:hover:not(:disabled) {
+  background-color: #2a2a2a;
+  transform: translateY(-1px);
+}
+
+.boton-confirmar:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   10. AJUSTE EN TARJETAS DE SERVICIOS (subtítulo en español)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Subtítulo en español bajo el título en inglés */
+.servicio-card__subtitulo-es {
+  font-size: 0.78rem;
+  color: var(--color-gris-texto);
+  margin-bottom: var(--espacio-xs);
+  font-style: italic;
+}
+
+/* Privacidad del paso 4 */
+.paso4__privacidad {
+  font-size: 0.8rem;
+  color: var(--color-gris-texto);
+  text-align: center;
+}
+
+.paso4__privacidad-link {
+  color: var(--color-negro);
+  text-decoration: underline;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   11. RESPONSIVE
+   ═══════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .wizard-reserva__contenido {
+    padding: var(--espacio-lg) var(--espacio-md);
+  }
+
+  /* Indicador de pasos: ocultar etiquetas en móvil */
+  .indicador-pasos__etiqueta {
+    display: none;
+  }
+
+  .indicador-pasos {
+    padding: var(--espacio-md) var(--espacio-sm);
+  }
+
+  /* Paso 1: 1 columna en móvil */
+  .paso1__grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Formulario: 1 columna en móvil */
+  .formulario__fila {
+    grid-template-columns: 1fr;
+  }
+
+  /* Vehículos: simplificar grid */
+  .vehiculo-card {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto auto;
+    padding: var(--espacio-md);
+  }
+
+  .vehiculo-card__precio {
+    grid-column: 2;
+    grid-row: 1;
+    align-items: flex-end;
+  }
+
+  .vehiculo-card__capacidad {
+    grid-column: 1 / 3;
+    flex-wrap: wrap;
+  }
+
+  /* Confirmación */
+  .paso6__exito {
+    padding: var(--espacio-lg) var(--espacio-md);
+  }
+}
