@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   signInWithEmailAndPassword,
@@ -9,7 +9,10 @@ import {
 } from "firebase/auth";
 import { auth, googleProvider } from "@/app/lib/firebase";
 
-export default function PaginaLogin() {
+// ─── Componente interno que usa useSearchParams ───────────────────────────────
+// Next.js requiere que useSearchParams esté dentro de un Suspense boundary
+// para poder hacer el build de producción correctamente.
+function LoginContenido() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
@@ -172,5 +175,16 @@ export default function PaginaLogin() {
         </a>
       </div>
     </div>
+  );
+}
+
+// ─── Export default con Suspense boundary ────────────────────────────────────
+export default function PaginaLogin() {
+  return (
+    <Suspense fallback={
+      <div style={{ minHeight: "100vh", background: "#111111" }} />
+    }>
+      <LoginContenido />
+    </Suspense>
   );
 }
