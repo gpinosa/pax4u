@@ -79,8 +79,8 @@ export default function WizardReserva({ servicioInicial }: Props) {
     irAlSiguiente();
   };
 
-  const seleccionarVehiculo = (tipo: TipoVehiculo) =>
-    setReserva((prev) => ({ ...prev, vehiculo: tipo }));
+const seleccionarVehiculo = (id: string, precio: number) =>
+  setReserva((prev) => ({ ...prev, vehiculo: id as TipoVehiculo }));
 
   const guardarCliente = (datos: DatosCliente) => {
     setReserva((prev) => ({ ...prev, cliente: datos }));
